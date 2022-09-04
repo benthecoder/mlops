@@ -19,6 +19,10 @@ alternative option for ssh keys:
 - `ssh-keygen -t rsa -f ~/.ssh/KEY_FILENAME -C USERNAME -b 2048`
 - add ssh public file to metadata ssh
 
+## stop instances with gcloud
+
+- `gcloud compute instances stop INSTANCE_NAME`
+
 ## install necessary libraries
 
 install anaconda
@@ -35,3 +39,4 @@ install docker and docker compose
 ## for ssh into vs code
 
 - install remote - ssh extension
+
