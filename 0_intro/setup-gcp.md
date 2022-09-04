@@ -32,6 +32,7 @@ install anaconda
 
 install docker and docker compose
 
+- `sudo apt update`
 - `sudo apt install docker.io`
 - `sudo apt install docker-compose`
 - `sudo usermod -aG docker $USER` (run docker without sudo)
@@ -39,4 +40,3 @@ install docker and docker compose
 ## for ssh into vs code
 
 - install remote - ssh extension
-
