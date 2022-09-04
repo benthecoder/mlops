@@ -31,3 +31,9 @@ Monitor
 This process can be fully automated.
 
 ## MLOps Maturity model
+
+
+
+## office hours insights
+
+- why dict vectorizer?
