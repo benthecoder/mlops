@@ -51,3 +51,7 @@ Also logs extra information automatically
 - version of code
 - start and end time
 - author
+
+## Model management
+
+![neptune.ai](images/MLOps_cycle.webp)
