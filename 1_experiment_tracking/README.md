@@ -55,3 +55,9 @@ Also logs extra information automatically
 ## Model management
 
 ![neptune.ai](images/MLOps_cycle.webp)
+
+## model registrty
+
+- track stage of model and have access to all versions
+- not going to deploy models for you, only labels models for staging, production or archieve
+- you need CI/CD code to deploy models

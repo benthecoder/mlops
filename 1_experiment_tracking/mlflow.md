@@ -6,26 +6,36 @@
 2. `pip install -r requirements.txt`
 3. run mlflow and configure backend `mlflow ui --backend-store-uri sqlite:///mlflow.db`
 
-## functions
+[setup mlflow on aws rds](https://github.com/DataTalksClub/mlops-zoomcamp/blob/main/02-experiment-tracking/mlflow_on_aws.md)
+
+## Code
 
 ```py
 import mlflow
 
 mlflow.set_tracking_uri('sqlite:///mlflow.db')
-mlflow.set_experiment("experiment_name") 
+mlflow.set_experiment("experiment_name")
 
 mlflow.set_tag("model", "xgboost")
 mlflow.log_param("param_name", param)
 mlflow.log_metric("metric_name", metric)
 
-# log model options 
+# log model options
 # 1
 mlflow.log_artifact(local_path = "path/to/model", artifact_path="models")
 
-# 2 
+# 2
 mlflow.<framework>.log_model(model, artifat_path="models")
 
 mlflow.xgboost.autolog()
+
+# log preprocessor
+
+dv = DictVectorizer()
+with open("models/preprocessor.b", "wb") as f_out:
+    pickle.dump(dv, f_out)
+
+mlflow.log_artifact("models/preprocessor.b", artifact_path = "preprocessor")
 
 
 logged_model = 'runs:/run_id/models_mlflow'
@@ -37,12 +47,13 @@ loaded_model = mlflow.pyfunc.load_model(logged_model)
 xgboost_model = mlflow.xgboost.load_model(logged_model)
 ```
 
+## what model log saves
 
-model log saves
+1\. MLModel file
 
-1. MLModel file
+example
 
-``` yaml
+```yaml
 artifact_path: models_mlflow
 flavors:
   python_function:
@@ -61,23 +72,35 @@ run_id: 272a28f2395e4d75ae627a85fdd8cb90
 utc_time_created: '2022-09-04 23:21:36.309514'
 ```
 
-2. conda.yaml file
+2\. conda.yaml file
 
-``` yaml
+```yaml
 channels:
-- conda-forge
+  - conda-forge
 dependencies:
-- python=3.9.13
-- pip<=22.1.2
-- pip:
-  - mlflow
-  - pandas==1.4.4
-  - psutil==5.9.2
-  - scikit-learn==1.1.2
-  - xgboost==1.6.2
+  - python=3.9.13
+  - pip<=22.1.2
+  - pip:
+      - mlflow
+      - pandas==1.4.4
+      - psutil==5.9.2
+      - scikit-learn==1.1.2
+      - xgboost==1.6.2
 name: mlflow-env
 ```
 
-3. model itself
+3\. model itself
 
-4. requirements file
+4\. requirements file
+
+5\. Python_env yaml
+
+```yaml
+python: 3.9.13
+build_dependencies:
+  - pip==22.1.2
+  - setuptools==63.4.1
+  - wheel==0.37.1
+dependencies:
+  - -r requirements.txt
+```

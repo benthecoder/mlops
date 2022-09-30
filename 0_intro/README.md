@@ -1,4 +1,4 @@
-# Notes for week 1
+# Notes for week 0
 
 MLOps is putting ML into production using best practices
 
