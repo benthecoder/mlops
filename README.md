@@ -34,5 +34,13 @@ Course Info
 ## Week 1 : MLFlow
 
 - [notes](1_experiment_tracking/README.md)
-- [mlflow notes](1_experiment_tracking/mlflow.md)
+- [mlflow code snippets](1_experiment_tracking/mlflow.md)
 - [notebook](1_experiment_tracking/duration-pred.ipynb)
+- [model registry](1_experiment_tracking/model-registry.ipynb)
+- [mlflow scenarios](1_experiment_tracking/scenarios.ipynb)
+- [hw1](1_experiment_tracking/homework/homework.ipynb)
+
+## Week 2 : WorkFlow orchestration with Prefect
+
+- [notes](2_orchestration/README.md)
+- [deploy notebook code](2_orchestration/model_training.py)

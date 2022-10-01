@@ -1,22 +1,54 @@
 # mlflow notes
 
+- [mlflow notes](#mlflow-notes)
+  - [run mlflow](#run-mlflow)
+  - [Code](#code)
+    - [Setup](#setup)
+    - [Experiment](#experiment)
+    - [Logging](#logging)
+    - [load model](#load-model)
+    - [Download artifacts](#download-artifacts)
+    - [model registry](#model-registry)
+  - [what model log saves](#what-model-log-saves)
+
 ## run mlflow
 
 1. create env `conda create -n mlflow_env python=3.9`
 2. `pip install -r requirements.txt`
-3. run mlflow and configure backend `mlflow ui --backend-store-uri sqlite:///mlflow.db`
+3. run mlflow and configure backend `mlflow server --backend-store-uri sqlite:///mlflow.db --default-artifact-root artifacts`
 
 [setup mlflow on aws rds](https://github.com/DataTalksClub/mlops-zoomcamp/blob/main/02-experiment-tracking/mlflow_on_aws.md)
 
 ## Code
 
+### Setup
+
+The MlflowClient object allows us to interact with...
+
+- an MLflow Tracking Server that creates and manages experiments and runs.
+- an MLflow Registry Server that creates and manages registered models and model versions.
+
 ```py
-import mlflow
+from mlflow.tracking import MlflowClient
 
-mlflow.set_tracking_uri('sqlite:///mlflow.db')
-mlflow.set_experiment("experiment_name")
+MLFLOW_TRACKING_URI = "sqlite:///mlflow.db"
+client = MlflowClient(MLFLOW_TRACKING_URI)
+mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
 
-mlflow.set_tag("model", "xgboost")
+```
+
+### Experiment
+
+```py
+client.list_experiments()
+client.create_experiment("my_experiment")
+mlflow.set_experiment("my_experiment")
+```
+
+### Logging
+
+```py
+mlflow.set_tag("model", "model_name")
 mlflow.log_param("param_name", param)
 mlflow.log_metric("metric_name", metric)
 
@@ -28,16 +60,20 @@ mlflow.log_artifact(local_path = "path/to/model", artifact_path="models")
 mlflow.<framework>.log_model(model, artifat_path="models")
 
 mlflow.xgboost.autolog()
+mlflow.sklearn.autolog()
 
 # log preprocessor
-
 dv = DictVectorizer()
 with open("models/preprocessor.b", "wb") as f_out:
     pickle.dump(dv, f_out)
 
 mlflow.log_artifact("models/preprocessor.b", artifact_path = "preprocessor")
 
+```
 
+### load model
+
+```py
 logged_model = 'runs:/run_id/models_mlflow'
 
 # Load model as a PyFuncModel.
@@ -45,6 +81,64 @@ loaded_model = mlflow.pyfunc.load_model(logged_model)
 
 # load as xgboost object
 xgboost_model = mlflow.xgboost.load_model(logged_model)
+```
+
+### Download artifacts
+
+```py
+client.download_artifacts(run_id=run_id, path='preprocessor', dst_path='.')
+```
+
+### model registry
+
+```py
+model_name = "model_name"
+
+# register model
+run_id = "ecf6dbc7209042318cc19a4d6a8ac2e9"
+model_uri = f"runs:/{run_id}/model"
+mlflow.register_model(model_uri, model_name)
+
+# list versions
+latest_versions = client.get_latest_versions(name=model_name)
+for version in latest_versions:
+    print(f"version: {version.version}, stage: {version.current_stage}")
+
+# change stage
+model_version = 4
+new_stage = "Staging"
+client.transition_model_version_stage(
+    name = model_name,
+    version = model_version,
+    stage = new_stage,
+    archive_existing_versions=False
+)
+
+# add description
+from datetime import datetime
+date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+client.update_model_version(
+    name = model_name,
+    version = model_version,
+    description = f"This is a model version {model_version} was transitioned to {new_stage} on {date}",
+)
+
+# list runs and sort by metric
+runs = client.search_runs(
+    experiment_ids=experiment.experiment_id,
+    run_view_type=ViewType.ACTIVE_ONLY,
+    max_results=log_top,
+    order_by=["metrics.rmse ASC"],
+)
+
+
+# production v3 & staging v4 -> archieve v3 & production v4
+client.transition_model_version_stage(
+    name = model_name,
+    version = 4,
+    stage = "Production",
+    archive_existing_versions=True
+)
 ```
 
 ## what model log saves

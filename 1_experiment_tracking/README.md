@@ -1,5 +1,16 @@
 # Experiment tracking
 
+- [Experiment tracking](#experiment-tracking)
+  - [important concepts](#important-concepts)
+  - [what is experiment tracking?](#what-is-experiment-tracking)
+  - [why is it important](#why-is-it-important)
+  - [Why not just track in spreadsheets?](#why-not-just-track-in-spreadsheets)
+  - [Solution: MLFlow](#solution-mlflow)
+  - [Ml Flow tracking](#ml-flow-tracking)
+  - [Model management](#model-management)
+  - [model registrty](#model-registrty)
+  - [MLFlow vs other tools](#mlflow-vs-other-tools)
+
 ## important concepts
 
 ml experiment = process of building a model
@@ -61,3 +72,14 @@ Also logs extra information automatically
 - track stage of model and have access to all versions
 - not going to deploy models for you, only labels models for staging, production or archieve
 - you need CI/CD code to deploy models
+
+features
+
+- model lineage
+- model versioning
+- stage transitions
+- annotation
+
+## MLFlow vs other tools
+
+<https://neptune.ai/blog/best-ml-experiment-tracking-tools>
