@@ -13,5 +13,7 @@
 4. configure storage
    - set 30 GB storage
 5. copy public IP
-6. run `ssh -i path/to/key.pem ubuntu@public_ip`
+6. `chmod 400 ~/.ssh/<key>.pem`
+7. run `ssh -i path/to/key.pem ubuntu@public_ip`
    - for "WARNING: UNPROTECTED PRIVATE KEY FILE!" error, do `sudo chmod 600 /path/to/key.pem`
+   - for permission denied? username might be wrong, go connect to instance and check username

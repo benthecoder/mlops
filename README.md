@@ -43,4 +43,9 @@ Course Info
 ## Week 2 : WorkFlow orchestration with Prefect
 
 - [notes](2_orchestration/README.md)
-- [deploy notebook code](2_orchestration/model_training.py)
+- [notebook](2_orchestration/prefect_flow.py)]
+- [hw2](2_orchestration/homework.py)
+
+## Week 2 : Deployment
+
+- [notes](3_deployment/README.md)
